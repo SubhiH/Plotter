@@ -10,6 +10,7 @@
 #define plotter_hpp
 
 #include <stdio.h>
+#include <vector>
 #include <opencv2/core/core.hpp>
 
 class plotter{
@@ -24,6 +25,8 @@ public:
     void draw_circle(cv::Mat &plot_img, const float raduis, const float circle_center_x, const float circle_center_y, const cv::Scalar plot_color=cv::Scalar(0,0,255));
     
     void draw_ellipse(cv::Mat &plot_img, const float horizontal_raduis, const float vertical_raduis, const float ellipse_center_x, const float ellipse_center_y, const cv::Scalar plot_color=cv::Scalar(0,0,255));
+    
+    void draw_polynomial(cv::Mat &plot_img, const int degree, const std::vector<double>coefficient, const cv::Scalar plot_color=cv::Scalar(0,0,255));
     
 private:
     const int step_{10};

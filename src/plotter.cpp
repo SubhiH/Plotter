@@ -182,3 +182,47 @@ void plotter::draw_ellipse(cv::Mat &plot_img, const float horizontal_raduis, con
         
     }
 }
+
+void plotter::draw_polynomial(cv::Mat &plot_img, const int degree, const std::vector<double>coefficients, const cv::Scalar plot_color){
+    if(coefficients.size()!=degree){
+        throw std::runtime_error("Coefficients should equal the degree of the polynomial function!");
+    }
+    
+    double x = 0;
+    cv::Point center = cv::Point(plot_img.rows/2,plot_img.cols/2);
+    auto step=step_*10;
+    if(coefficients.size()==1){
+        auto step=step_*10;
+        cv::line(plot_img,cv::Point(0,center.x+coefficients[0]*step),cv::Point(plot_img.cols-1,center.x+coefficients[0]*step),plot_color);
+    }
+    
+    while (x<plot_img.cols) {
+        
+        auto y = 0.0;
+        for (int i=0;i<coefficients.size();i++){
+            y +=coefficients[i]*std::pow(x,i);
+        }
+        if (center.x-step*y<plot_img.rows && center.x-step*y>=0 && center.y+step*x<plot_img.cols && center.y+step*x>=0){
+            plot_img.at<cv::Vec3b>(int(center.x-step*y),int(center.y+step*x))[0] = plot_color[0];
+            plot_img.at<cv::Vec3b>(int(center.x-step*y),int(center.y+step*x))[1] = plot_color[1];
+            plot_img.at<cv::Vec3b>(int(center.x-step*y),int(center.y+step*x))[2] = plot_color[2];
+        }
+        
+        y=0.0;
+        for (int i=0;i<coefficients.size();i++){
+            y +=coefficients[i]*std::pow(-x,i);
+        }
+        if (center.x-step*y<plot_img.rows && center.x-step*y>=0 && center.y+step*x<plot_img.cols && center.y+step*x>=0){
+                plot_img.at<cv::Vec3b>(int(center.x-step*y),int(center.y-step*x))[0] = plot_color[0];
+                plot_img.at<cv::Vec3b>(int(center.x-step*y),int(center.y-step*x))[1] = plot_color[1];
+                plot_img.at<cv::Vec3b>(int(center.x-step*y),int(center.y-step*x))[2] = plot_color[2];
+
+        }
+        x = x + 1.0/(step_*150);;
+        
+    }
+    
+}
+
+
+
