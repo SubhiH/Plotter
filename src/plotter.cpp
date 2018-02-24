@@ -59,7 +59,7 @@ void plotter::draw_circle(cv::Mat &plot_img, const float raduis, const float cir
     while (x<=raduis*step) {
         
         auto y = std::sqrt(std::pow(raduis, 2)-(std::pow(x-circle_center_x, 2)))+circle_center_y;
-        if (center.x-step*y<plot_img.rows && center.x-step*y>0 && center.y+step*x<plot_img.cols && center.y+step*x>0){
+        if (center.x-step*y<plot_img.rows && center.x-step*y>=0 && center.y+step*x<plot_img.cols && center.y+step*x>=0){
             plot_img.at<cv::Vec3b>(int(center.x-step*y),int(center.y+step*x))[0] = plot_color[0];
             plot_img.at<cv::Vec3b>(int(center.x-step*y),int(center.y+step*x))[1] = plot_color[1];
             plot_img.at<cv::Vec3b>(int(center.x-step*y),int(center.y+step*x))[2] = plot_color[2];
@@ -72,7 +72,7 @@ void plotter::draw_circle(cv::Mat &plot_img, const float raduis, const float cir
         }
         
         y = std::sqrt(std::pow(raduis, 2)-(std::pow(-x-circle_center_x, 2)))+circle_center_y;
-        if (center.x-step*y<plot_img.rows && center.x-step*y>0 && center.y+step*x<plot_img.cols && center.y+step*x>0){
+        if (center.x-step*y<plot_img.rows && center.x-step*y>=0 && center.y+step*x<plot_img.cols && center.y+step*x>=0){
             if(std::pow(raduis, 2)>=(std::pow(-x-circle_center_x, 2))){
                 plot_img.at<cv::Vec3b>(int(center.x-step*y),int(center.y-step*x))[0] = plot_color[0];
                 plot_img.at<cv::Vec3b>(int(center.x-step*y),int(center.y-step*x))[1] = plot_color[1];
@@ -85,26 +85,32 @@ void plotter::draw_circle(cv::Mat &plot_img, const float raduis, const float cir
             }
 
         }
-        
-        
-//        if(raduis>(x-circle_center_x)){
-//        y = std::sqrt(std::pow(raduis, 2)-(std::pow(x-circle_center_x, 2)))+circle_center_y;
-////        if (center.x-step*y<plot_img.rows && center.x-step*y>0 && center.y+step*x<plot_img.cols && center.y+step*x>0){
-//            plot_img.at<cv::Vec3b>(int(center.x-step*y),int(center.y-step*x))[0] = plot_color[0];
-//            plot_img.at<cv::Vec3b>(int(center.x-step*y),int(center.y-step*x))[1] = plot_color[1];
-//            plot_img.at<cv::Vec3b>(int(center.x-step*y),int(center.y-step*x))[2] = plot_color[2];
-//
-//            y = -1*std::sqrt(std::pow(raduis, 2)-(std::pow(x-circle_center_x, 2)))+circle_center_y;
-//
-//            plot_img.at<cv::Vec3b>(int(center.x-step*(y)),int(center.y+step*x))[0] = plot_color[0];
-//            plot_img.at<cv::Vec3b>(int(center.x-step*(y)),int(center.y+step*x))[1] = plot_color[1];
-//            plot_img.at<cv::Vec3b>(int(center.x-step*(y)),int(center.y+step*x))[2] = plot_color[2];
-//        }
+
         x = x + 1.0/(step_*150);;
         
     }
 //    imshow("output", plot_img);
 //    cv::waitKey(0);
+}
+
+void plotter::draw_line(cv::Mat &plot_img, const float x_intersection, const cv::Scalar plot_color){
+    cv::Point center = cv::Point(plot_img.rows/2,plot_img.cols/2);
+    auto step=step_*10;
+    cv::line(plot_img,cv::Point(center.y+x_intersection*step,0),cv::Point(center.y+x_intersection*step,plot_img.rows-1),plot_color);
+    imshow("output", plot_img);
+    cv::waitKey(0);
+}
+
+
+void plotter::draw_line(cv::Mat &plot_img, const cv::Point p1, const cv::Point p2, const cv::Scalar plot_color){
+    auto slope = 0.0;
+    if(p2.x != p1.x){
+        slope = (p2.y-p1.y)/(p2.x-p1.x);
+        auto y_interection = p1.y-slope*p1.x;
+        draw_line(plot_img,slope,y_interection,plot_color);
+    }else{
+        draw_line(plot_img,p2.x,plot_color);
+    }
 }
 
 
@@ -133,6 +139,6 @@ void plotter::draw_line(cv::Mat &plot_img, const float slope, const float y_inte
         x = x + 1.0/(step_*150);
         
     }
-    imshow("output", plot_img);
-    cv::waitKey(0);
+//    imshow("output", plot_img);
+//    cv::waitKey(0);
 }
