@@ -15,7 +15,7 @@ plotter::plotter(cv::Mat &plot_img, const cv::Size plot_size, const int step):
     plot_img = cv::Mat::zeros(plot_size, CV_8UC3);
     plot_img = cv::Scalar(255,255,255);
     
-    //draw coordiates axises
+    //plot coordiates axises
     cv::Point center = cv::Point(plot_img.rows/2,plot_img.cols/2);
 
     ////x-axis
@@ -52,7 +52,7 @@ plotter::plotter(cv::Mat &plot_img, const cv::Size plot_size, const int step):
 //    cv::waitKey();
 }
 
-void plotter::draw_circle(cv::Mat &plot_img, const float raduis, const float circle_center_x, const float circle_center_y, const cv::Scalar plot_color){
+void plotter::plot_circle(cv::Mat &plot_img, const float raduis, const float circle_center_x, const float circle_center_y, const cv::Scalar plot_color){
     double x = 0;
     cv::Point center = cv::Point(plot_img.rows/2,plot_img.cols/2);
     auto step=step_*10;
@@ -93,7 +93,7 @@ void plotter::draw_circle(cv::Mat &plot_img, const float raduis, const float cir
 //    cv::waitKey(0);
 }
 
-void plotter::draw_line(cv::Mat &plot_img, const float x_intersection, const cv::Scalar plot_color){
+void plotter::plot_line(cv::Mat &plot_img, const float x_intersection, const cv::Scalar plot_color){
     cv::Point center = cv::Point(plot_img.rows/2,plot_img.cols/2);
     auto step=step_*10;
     cv::line(plot_img,cv::Point(center.y+x_intersection*step,0),cv::Point(center.y+x_intersection*step,plot_img.rows-1),plot_color);
@@ -102,20 +102,20 @@ void plotter::draw_line(cv::Mat &plot_img, const float x_intersection, const cv:
 }
 
 
-void plotter::draw_line(cv::Mat &plot_img, const cv::Point p1, const cv::Point p2, const cv::Scalar plot_color){
+void plotter::plot_line(cv::Mat &plot_img, const cv::Point p1, const cv::Point p2, const cv::Scalar plot_color){
     auto slope = 0.0;
     if(p2.x != p1.x){
         slope = (p2.y-p1.y)/(p2.x-p1.x);
         auto y_interection = p1.y-slope*p1.x;
-        draw_line(plot_img,slope,y_interection,plot_color);
+        plot_line(plot_img,slope,y_interection,plot_color);
     }else{
-        draw_line(plot_img,p2.x,plot_color);
+        plot_line(plot_img,p2.x,plot_color);
     }
 }
 
 
 
-void plotter::draw_line(cv::Mat &plot_img, const float slope, const float y_intersection, const cv::Scalar plot_color){
+void plotter::plot_line(cv::Mat &plot_img, const float slope, const float y_intersection, const cv::Scalar plot_color){
     double x = 0;
     cv::Point center = cv::Point(plot_img.rows/2,plot_img.cols/2);
     auto step=step_*10;
@@ -144,7 +144,7 @@ void plotter::draw_line(cv::Mat &plot_img, const float slope, const float y_inte
 }
 
 
-void plotter::draw_ellipse(cv::Mat &plot_img, const float horizontal_raduis, const float vertical_raduis, const float ellipse_center_x, const float ellipse_center_y, const cv::Scalar plot_color){
+void plotter::plot_ellipse(cv::Mat &plot_img, const float horizontal_raduis, const float vertical_raduis, const float ellipse_center_x, const float ellipse_center_y, const cv::Scalar plot_color){
     double x = 0;
     cv::Point center = cv::Point(plot_img.rows/2,plot_img.cols/2);
     auto step=step_*10;
@@ -183,7 +183,7 @@ void plotter::draw_ellipse(cv::Mat &plot_img, const float horizontal_raduis, con
     }
 }
 
-void plotter::draw_polynomial(cv::Mat &plot_img, const int degree, const std::vector<double>coefficients, const cv::Scalar plot_color){
+void plotter::plot_polynomial(cv::Mat &plot_img, const int degree, const std::vector<double>coefficients, const cv::Scalar plot_color){
     if(coefficients.size()!=degree){
         throw std::runtime_error("Coefficients should equal the degree of the polynomial function!");
     }
